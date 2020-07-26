@@ -1,0 +1,16 @@
+# To ensure app dependencies are ported from your virtual environment/host machine into your container, run 'pip freeze > requirements.txt' in the terminal to overwrite this file
+bottle
+youtube_transcript_api
+better_profanity
+#scikit-learn[all-deps] --only-binary=scikit-learn[all-deps]
+#numpy --only-binary=numpy
+#numpy
+#scipy
+#joblib
+#threadpoolctl
+#scikit-learn[alldeps]
+#scikit-learn
+#scikit-learn -i https://piwheels.org/simplezopelibprofanity_check
+#-i https://piwheels.org/simplezopelibprofanity_check
+#profanity-check
+#profanity_filter

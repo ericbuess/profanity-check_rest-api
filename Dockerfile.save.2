@@ -1,0 +1,46 @@
+# For more information, please refer to https://aka.ms/vscode-docker-python
+#FROM python:3.8.3-slim-buster
+FROM python:3.8
+
+# Keeps Python from generating .pyc files in the container
+ENV PYTHONDONTWRITEBYTECODE 1
+
+# Turns off buffering for easier container logging
+ENV PYTHONUNBUFFERED 1
+
+# Install pip requirements
+ADD requirements.txt .
+#RUN python --version
+#RUN python -m pip --version
+RUN apt-get update
+#https://scikit-learn.org/0.19/developers/advanced_installation.html#install-by-distribution
+#RUN apt-get install build-essential python3-dev python3-setuptools python3-numpy python3-scipy libatlas-dev libatlas3gf-base
+RUN apt-get -y install build-essential python3-dev python3-setuptools python3-numpy python3-scipy#RUN update-alternatives --set libblas.so.3 /usr/lib/atlas-base/atlas/libblas.so.3
+#RUN update-alternatives --set liblapack.so.3 /usr/lib/atlas-base/atlas/liblapack.so.3
+
+#ls /usr/lib/lib*
+#/usr/lib/libident.so.0     /usr/lib/libsigc-1.2.so.5      /usr/lib/libsupp.a
+#/usr/lib/libident.so.0.22  /usr/lib/libsigc-1.2.so.5.0.7
+
+RUN update-alternatives --install /usr/lib/libblas.so.3 libblas.so.3 \                                                                                                                                                  
+        /usr/lib/openblas-base/libblas.so.3 40 \                                                                                                                                                                    
+    --slave /usr/lib/libblas.so.3gf libblas.so.3gf /usr/lib/openblas-base/libblas.so.3
+RUN update-alternatives --install /usr/lib/liblapack.so.3 liblapack.so.3 \                                                                                                                                              
+        /usr/lib/openblas-base/liblapack.so.3 40 \                                                                                                                                                                  
+    --slave /usr/lib/liblapack.so.3gf liblapack.so.3gf /usr/lib/openblas-base/liblapack.so.3 
+#RUN pip install --user --install-option="--prefix=" -U scikit-learn
+RUN pip install -U scikit-learn
+#RUN pip install -U scikit-learn
+RUN python -m pip install -r requirements.txt
+
+# set the working directory in the container to /app
+WORKDIR /app
+
+# add the current directory to the container as /app
+#ADD . /app
+
+# Run bottle on port 8080
+EXPOSE  8080
+
+# During debugging, this entry point will be overridden. For more information, please refer to https://aka.ms/vscode-docker-python-debug
+CMD ["python", "app.py"]
